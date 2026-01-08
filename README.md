@@ -8,6 +8,7 @@ epcqr is a Go-based tool for generating SEPA Credit Transfer (EPC069-12) QR code
 - **Multiple Formats**: Output to Console (ANSI), PNG, or SVG.
 - **Web Server Mode**: Run a lightweight HTTP server to generate QR codes on the fly via URL parameters.
 - **Standard Compliant**: meaningful implementation of the EPC069-12 standard.
+- **Validation**: Automatically validates IBAN checksums and structure (can be bypassed with `-force`).
 
 ## Installation
 
@@ -26,6 +27,8 @@ This will create an `epcqr` binary in your directory.
 ### CLI Mode
 
 The default mode is CLI. You must provide at least an IBAN and a Beneficiary Name. The default output format is `console`.
+
+IBANs with spaces (e.g. `BE12 3456 7890 1234`) will be automatically cleaned. Validation is performed by default.
 
 **Basic Usage (Console Output):**
 
@@ -56,6 +59,7 @@ The default mode is CLI. You must provide at least an IBAN and a Beneficiary Nam
 | `-ref`    | Remittance Reference (ISO 11649)        | No        |           |
 | `-text`   | Remittance Text                         | No        |           |
 | `-info`   | Beneficiary to Originator Info          | No        |           |
+| `-force`  | Force generation with invalid IBAN      | No        | `false`   |
 | `-format` | Output format (`console`, `png`, `svg`) | No        | `console` |
 | `-out`    | Output filename                         | No        | `qr.png`  |
 | `-mode`   | Operation mode (`cli`, `server`)        | No        | `cli`     |
@@ -89,3 +93,4 @@ http://localhost:8080/?iban=BE123456789&name=JohnDoe&amount=10.50&format=png
 ## Dependencies
 
 - [github.com/piglig/go-qr](https://github.com/piglig/go-qr) for QR code generation.
+- [github.com/jbub/banking/iban](https://github.com/jbub/banking) for IBAN validation.

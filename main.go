@@ -10,6 +10,9 @@ import (
     "net/http"
     "os"
     "strconv"
+    "strings"
+
+    ibanpkg "github.com/jbub/banking/iban"
 )
 
 func main() {
@@ -21,7 +24,8 @@ func main() {
     ref := flag.String("ref", "", "Remittance Reference (ISO 11649)")
     text := flag.String("text", "", "Remittance Text")
     info := flag.String("info", "", "Beneficiary to Originator Information")
-    
+    force := flag.Bool("force", false, "Force generation even if IBAN is invalid")
+
     // CLI specific
     out := flag.String("out", "qr.png", "Output file path")
     format := flag.String("format", "console", "Output format (png, svg, console)")
@@ -39,6 +43,15 @@ func main() {
             fmt.Println("Error: -iban and -name are required for CLI mode")
             flag.PrintDefaults()
             os.Exit(1)
+        }
+
+        *iban = strings.ReplaceAll(*iban, " ", "")
+
+        if !*force {
+            _, err := ibanpkg.Parse(*iban)
+            if err != nil {
+                log.Fatalf("Invalid IBAN: %v", err)
+            }
         }
 
         data := &epc.Data{
@@ -79,6 +92,7 @@ func startServer(port string) {
         text := query.Get("text")
         info := query.Get("info")
         format := query.Get("format")
+		force := query.Get("force") == "1" || strings.ToLower(query.Get("force")) == "true"
 
         if format == "" {
             format = "png"
@@ -86,6 +100,21 @@ func startServer(port string) {
         if format != "png" && format != "svg" {
             http.Error(w, "Invalid format. Supported: png, svg", http.StatusBadRequest)
             return
+        }
+
+        if iban == "" || name == "" {
+            http.Error(w, "Missing required parameters: iban, name", http.StatusBadRequest)
+            return
+        }
+
+        iban = strings.ReplaceAll(iban, " ", "")
+
+        if !force {
+            _, err := ibanpkg.Parse(iban)
+            if err != nil {
+                http.Error(w, fmt.Sprintf("Invalid IBAN: %v", err), http.StatusBadRequest)
+                return
+            }
         }
 
         amount := 0.0
@@ -96,11 +125,6 @@ func startServer(port string) {
                 http.Error(w, "Invalid amount", http.StatusBadRequest)
                 return
             }
-        }
-
-        if iban == "" || name == "" {
-            http.Error(w, "Missing required parameters: iban, name", http.StatusBadRequest)
-            return
         }
 
         data := &epc.Data{
@@ -127,7 +151,7 @@ func startServer(port string) {
             return
         }
         defer os.Remove(tmpFile.Name()) // Clean up
-        tmpFile.Close() // Close so generator can write to it (by path)
+        tmpFile.Close()                 // Close so generator can write to it (by path)
 
         err = qr.Generate(content, format, tmpFile.Name())
         if err != nil {
