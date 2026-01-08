@@ -1,0 +1,12 @@
+# Binaries
+epcqr
+
+# Generated images
+*.png
+*.svg
+
+# OS specific
+.DS_Store
+
+# Editor
+.vscode/
