@@ -59,11 +59,7 @@ func (d *Data) GenerateString() (string, error) {
     // 7. IBAN
     sb.WriteString(strings.ReplaceAll(d.IBAN, " ", "") + "\n")
     // 8. Amount (EUR<Amount>)
-    if d.Amount > 0 {
-        sb.WriteString(fmt.Sprintf("EUR%.2f\n", d.Amount))
-    } else {
-        sb.WriteString("\n") // Amount is optional in some contexts, or 0.01 min
-    }
+    sb.WriteString(fmt.Sprintf("EUR%.2f\n", d.Amount))
     // 9. Purpose Code (optional, empty here for simplicity)
     sb.WriteString("\n")
     // 10. Remittance Reference (Structured)
@@ -73,6 +69,6 @@ func (d *Data) GenerateString() (string, error) {
     sb.WriteString(strings.TrimSpace(d.RemittanceText) + "\n")
     // 12. Information
     sb.WriteString(strings.TrimSpace(d.Information) + "\n") // End of data, standard says it doesn't need trailing newline necessarily but usually handled by splitter
-    
+
     return sb.String(), nil
 }
