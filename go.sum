@@ -1,6 +1,8 @@
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/jbub/banking v0.8.0 h1:79kXJj1X2E9dWdWuFNkk2Pw7c6uYPFQS8ev0l+zMFxk=
+github.com/jbub/banking v0.8.0/go.mod h1:ctv/bD2EGRR5PobFrJSXZ/FZXCFtUbmVv6v2qf/b/88=
 github.com/piglig/go-qr v0.2.6 h1:oE8v9NGXHWahoFrnS44xsq0Lq0oIRIV7gMBM8cfRGwE=
 github.com/piglig/go-qr v0.2.6/go.mod h1:funyXL4IdgMPcbICoVm1XweMtZy7Px3kyITTENkmA5w=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
